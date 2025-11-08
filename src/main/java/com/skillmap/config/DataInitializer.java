@@ -1,3 +1,4 @@
+/*
 package com.skillmap.config;
 
 import com.skillmap.model.*;
@@ -125,4 +126,4 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println("👤 Пользователь: alex@example.com / password123");
         System.out.println("🗺 Карты: Frontend Development, Backend Development");
     }
-}
+}*/

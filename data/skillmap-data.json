@@ -1,0 +1,23 @@
+{
+  "skillMaps" : [ {
+    "createdAt" : "Sat Nov 08 15:37:09 MSK 2025",
+    "nodes" : [ ],
+    "description" : "awdawd",
+    "id" : 1762605429776,
+    "title" : "dawdwad",
+    "ownerId" : 1762605394119
+  } ],
+  "users" : [ {
+    "createdAt" : "Sat Nov 08 15:19:16 MSK 2025",
+    "password" : "password123",
+    "name" : "Алексей Петров",
+    "id" : 1,
+    "email" : "alex@example.com"
+  }, {
+    "createdAt" : "Sat Nov 08 15:36:34 MSK 2025",
+    "password" : "qwdqwd",
+    "name" : "awdawdawd",
+    "id" : 1762605394119,
+    "email" : "adwdawd@dadw.ru"
+  } ]
+}
