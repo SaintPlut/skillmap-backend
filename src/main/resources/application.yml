@@ -1,0 +1,41 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/landing_db
+    username: postgres                    # замените на ваш username
+    password: qwsdvml9     # замените на реальный пароль
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create                    # для первого запуска создаст таблицы
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  sql:
+    init:
+      mode: always
+
+# JWT Configuration
+jwt:
+  secret: "mySuperSecretKeyThatIsAtLeast32CharactersLong123!"
+  expiration: 86400000
+
+# Swagger
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.landingapp: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.springframework.security: INFO
