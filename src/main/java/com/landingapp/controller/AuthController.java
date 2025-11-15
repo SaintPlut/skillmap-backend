@@ -2,6 +2,7 @@
 package com.landingapp.controller;
 
 import com.landingapp.dto.request.LoginRequest;
+import com.landingapp.dto.request.RegisterRequest;
 import com.landingapp.dto.response.AuthResponse;
 import com.landingapp.model.User;
 import com.landingapp.service.JwtService;
@@ -82,5 +83,31 @@ public class AuthController {
                 .maxAge(24 * 60 * 60)
                 .sameSite("Lax")
                 .build();
+    }
+
+    @PostMapping("/register")
+    @Operation(summary = "Регистрация нового пользователя")
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
+        // 1. Проверка что пользователь не существует
+        if (userService.existsByUsername(request.getUsername())) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // 2. Создание нового пользователя
+        User user = userService.createUser(
+                request.getUsername(),
+                request.getPassword(),
+                request.getEmail(),
+                "USER" // Роль по умолчанию
+        );
+
+        // 3. Генерация токена
+        UserDetails userDetails = userService.loadUserByUsername(user.getUsername());
+        String token = jwtService.generateToken(userDetails);
+
+        AuthResponse response = new AuthResponse(token, user.getUsername(), user.getRole());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, createCookie(token).toString())
+                .body(response);
     }
 }

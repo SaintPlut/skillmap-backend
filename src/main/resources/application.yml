@@ -36,6 +36,6 @@ server:
 
 logging:
   level:
-    com.landingapp: DEBUG
-    org.hibernate.SQL: DEBUG
+    com.landingapp: INFO
+    org.hibernate.SQL: INFO
     org.springframework.security: INFO

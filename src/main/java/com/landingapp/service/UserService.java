@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -55,6 +56,7 @@ public class UserService implements UserDetailsService {
             admin.setUsername("admin");
             admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setRole("ADMIN");
+            admin.setCreatedAt(LocalDateTime.now());
             userRepository.save(admin);
         }
     }
@@ -68,4 +70,49 @@ public class UserService implements UserDetailsService {
         return userRepository.count();
     }
 
+    // ДОБАВЬТЕ ЭТИ МЕТОДЫ ДЛЯ РЕГИСТРАЦИИ
+
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    public boolean existsByEmail(String email) {
+        // Если в вашей модели User есть поле email, используйте existsByEmail
+        // Если нет, можно временно вернуть false или добавить поле email
+        try {
+            return userRepository.existsByEmail(email);
+        } catch (Exception e) {
+            // Если метода existsByEmail еще нет в репозитории
+            return false;
+        }
+    }
+
+    public User createUser(String username, String password, String email, String role) {
+        // Проверка на уникальность имени пользователя
+        if (existsByUsername(username)) {
+            throw new RuntimeException("Пользователь с таким именем уже существует: " + username);
+        }
+
+        // Создание нового пользователя
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setRole(role);
+        user.setCreatedAt(LocalDateTime.now());
+
+        // Если в вашей модели есть поле email, установите его
+        try {
+            user.setEmail(email);
+        } catch (Exception e) {
+            // Если поля email нет, игнорируем
+            System.out.println("Email field not available: " + e.getMessage());
+        }
+
+        return userRepository.save(user);
+    }
+
+    // Дополнительный метод для создания пользователя без email (если поле отсутствует)
+    public User createUser(String username, String password, String role) {
+        return createUser(username, password, null, role);
+    }
 }
