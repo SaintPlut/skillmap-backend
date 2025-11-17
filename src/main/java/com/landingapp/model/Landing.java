@@ -34,4 +34,7 @@ public class Landing {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Column(nullable = false)
+    private Boolean published = false;
 }

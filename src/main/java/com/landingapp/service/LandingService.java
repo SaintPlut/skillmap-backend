@@ -195,4 +195,24 @@ public class LandingService {
         response.setBlocks(blockResponses);
         return response;
     }
+
+    public LandingService(LandingRepository landingRepository) {
+        this.landingRepository = landingRepository;
+    }
+
+    public long getPublishedLandingsCount() {
+        return landingRepository.countByPublishedTrue();
+    }
+
+    public long getUserLandingsCount(Long userId) {
+        return landingRepository.countByUserId(userId);
+    }
+
+    public List<Landing> getRecentLandings(int limit) {
+        return landingRepository.findTop5ByOrderByCreatedAtDesc();
+    }
+
+    public List<Landing> getAllLandings() {
+        return landingRepository.findAll();
+    }
 }

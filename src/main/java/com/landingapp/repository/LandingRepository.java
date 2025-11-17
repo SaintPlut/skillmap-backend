@@ -20,4 +20,8 @@ public interface LandingRepository extends JpaRepository<Landing, Long>, JpaSpec
 
     @Query("SELECT COUNT(l) FROM Landing l")
     Long countAllLandings();
+
+    long countByPublishedTrue();
+    long countByUserId(Long userId);
+    List<Landing> findTop5ByOrderByCreatedAtDesc();
 }

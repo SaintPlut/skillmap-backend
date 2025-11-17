@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -110,9 +111,16 @@ public class UserService implements UserDetailsService {
 
         return userRepository.save(user);
     }
-
-    // Дополнительный метод для создания пользователя без email (если поле отсутствует)
     public User createUser(String username, String password, String role) {
         return createUser(username, password, null, role);
     }
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
 }
