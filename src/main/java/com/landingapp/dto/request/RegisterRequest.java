@@ -31,7 +31,6 @@ public class RegisterRequest {
         this.confirmPassword = confirmPassword;
     }
 
-    // Геттеры и сеттеры
     public String getUsername() {
         return username;
     }

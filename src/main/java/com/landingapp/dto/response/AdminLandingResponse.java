@@ -15,7 +15,6 @@ public class AdminLandingResponse {
     private String authorUsername;
     private String authorEmail;
 
-    // конструктор из Entity
     public AdminLandingResponse(Landing landing) {
         this.id = landing.getId();
         this.name = landing.getName();

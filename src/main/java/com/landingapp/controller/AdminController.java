@@ -41,7 +41,6 @@ public class AdminController {
         long totalLandings = landingService.getTotalLandingsCount();
         long publishedLandings = landingService.getPublishedLandingsCount();
 
-        // Используем DTO для recentLandings
         List<AdminLandingResponse> recentLandings = landingService.getRecentLandings(5)
                 .stream()
                 .map(AdminLandingResponse::new)
@@ -78,7 +77,6 @@ public class AdminController {
         return ResponseEntity.ok(adminUsers);
     }
 
-    // FIXED: Используем DTO вместо Entity
     @GetMapping("/landings")
     public ResponseEntity<List<AdminLandingResponse>> getAllLandings() {
         List<Landing> landings = landingService.getAllLandings();

@@ -15,9 +15,6 @@ import org.springframework.context.annotation.Primary;
 
 import java.util.List;
 
-/**
- * Конфигурация Swagger/OpenAPI для автоматической генерации документации API
- */
 @Configuration
 public class SwaggerConfig {
 
@@ -42,7 +39,6 @@ public class SwaggerConfig {
                                 .name("MIT License")
                                 .url("https://opensource.org/licenses/MIT")))
 
-                // Список серверов
                 .servers(List.of(
                         new Server()
                                 .url("http://localhost:" + serverPort)
@@ -52,7 +48,6 @@ public class SwaggerConfig {
                                 .description("Продакшен сервер")
                 ))
 
-                // Компоненты безопасности
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth",
                                 new SecurityScheme()
@@ -70,14 +65,10 @@ public class SwaggerConfig {
                         )
                 )
 
-                // Глобальные требования безопасности
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .addSecurityItem(new SecurityRequirement().addList("cookieAuth"));
     }
 
-    /**
-     * Кастомная конфигурация для группировки API по тегам
-     */
     @Bean
     public OpenAPI customOpenAPIWithTags() {
         return customOpenAPI()

@@ -32,9 +32,6 @@ import java.util.List;
 )
 public class SecurityConfig {
 
-    // Убираем автосвязывание JwtAuthenticationFilter
-    // Вместо этого создаем бин с явной передачей зависимостей
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

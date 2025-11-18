@@ -31,10 +31,9 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(summary = "Вход в систему")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        // Используем метод authenticate, который возвращает User
+
         User user = userService.authenticate(request.getUsername(), request.getPassword());
 
-        // Для генерации токена используем UserDetails
         UserDetails userDetails = userService.loadUserByUsername(user.getUsername());
         String token = jwtService.generateToken(userDetails);
 
@@ -66,7 +65,6 @@ public class AuthController {
             String jwtToken = token.substring(7);
             if (jwtService.validateToken(jwtToken)) {
                 String username = jwtService.extractUsername(jwtToken);
-                // Используем метод, который возвращает User
                 User user = userService.findByUsername(username);
                 AuthResponse response = new AuthResponse(jwtToken, user.getUsername(), user.getRole());
                 return ResponseEntity.ok(response);
@@ -88,12 +86,10 @@ public class AuthController {
     @PostMapping("/register")
     @Operation(summary = "Регистрация нового пользователя")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
-        // 1. Проверка что пользователь не существует
         if (userService.existsByUsername(request.getUsername())) {
             return ResponseEntity.badRequest().build();
         }
 
-        // 2. Создание нового пользователя
         User user = userService.createUser(
                 request.getUsername(),
                 request.getPassword(),
@@ -101,7 +97,6 @@ public class AuthController {
                 "USER" // Роль по умолчанию
         );
 
-        // 3. Генерация токена
         UserDetails userDetails = userService.loadUserByUsername(user.getUsername());
         String token = jwtService.generateToken(userDetails);
 

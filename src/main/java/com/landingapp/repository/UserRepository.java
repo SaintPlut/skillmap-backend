@@ -10,12 +10,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
-
-    // Добавьте эти методы
     boolean existsByUsername(String username);
-
-    // Если в модели есть поле email, добавьте:
     boolean existsByEmail(String email);
-
-    // Если поля email нет, можно пока не добавлять existsByEmail
 }

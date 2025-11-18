@@ -1,12 +1,12 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/landing_db
-    username: postgres                    # замените на ваш username
-    password: qwsdvml9     # замените на реальный пароль
+    username: postgres
+    password: qwsdvml9
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update                    # для первого запуска создаст таблицы
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:

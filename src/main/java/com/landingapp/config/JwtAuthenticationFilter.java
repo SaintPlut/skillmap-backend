@@ -37,15 +37,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserService userService;
 
-    // Используем конструктор вместо @Autowired
     public JwtAuthenticationFilter(JwtService jwtService, UserService userService) {
         this.jwtService = jwtService;
         this.userService = userService;
     }
 
-    /**
-     * Основной метод фильтрации запросов
-     */
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -54,39 +50,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         try {
-            // Пропускаем публичные endpoints
             if (isPublicEndpoint(request)) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            // Извлекаем токен из запроса
             String token = extractTokenFromRequest(request);
 
             if (StringUtils.hasText(token) && jwtService.validateToken(token)) {
-                // Извлекаем username из токена
+
                 String username = jwtService.extractUsername(token);
 
                 if (StringUtils.hasText(username) &&
                         SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                    // Загружаем UserDetails из базы данных
                     UserDetails userDetails = userService.loadUserByUsername(username);
 
-                    // Создаем объект аутентификации
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(
                                     userDetails,
                                     null,
                                     userDetails.getAuthorities()
                             );
-
-                    // Устанавливаем детали запроса
                     authentication.setDetails(
                             new WebAuthenticationDetailsSource().buildDetails(request)
                     );
 
-                    // Устанавливаем аутентификацию в SecurityContext
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
                     logger.debug("Authenticated user: {}", username);
@@ -96,16 +85,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.warn("User not found for JWT token: {}", e.getMessage());
         } catch (Exception e) {
             logger.error("Cannot set user authentication: {}", e.getMessage());
-            // Не прерываем цепочку фильтров при ошибках аутентификации
         }
 
-        // Продолжаем цепочку фильтров
         filterChain.doFilter(request, response);
     }
 
-    /**
-     * Проверяет, является ли endpoint публичным (не требует аутентификации)
-     */
     private boolean isPublicEndpoint(HttpServletRequest request) {
         String path = request.getServletPath();
 
@@ -116,12 +100,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 path.equals("/favicon.ico");
     }
 
-    /**
-     * Извлекает JWT токен из запроса
-     * Проверяет сначала заголовок Authorization, затем cookies
-     */
     private String extractTokenFromRequest(HttpServletRequest request) {
-        // 1. Пробуем извлечь из заголовка Authorization
+
         String bearerToken = request.getHeader(AUTH_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             String token = bearerToken.substring(BEARER_PREFIX.length());
@@ -129,7 +109,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return token;
         }
 
-        // 2. Пробуем извлечь из cookies
         String tokenFromCookie = extractTokenFromCookies(request);
         if (StringUtils.hasText(tokenFromCookie)) {
             logger.debug("Extracted JWT from cookies");
@@ -140,9 +119,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    /**
-     * Извлекает токен из cookies запроса
-     */
     private String extractTokenFromCookies(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -156,14 +132,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    /**
-     * Определяет, должен ли фильтр применяться к данному запросу
-     * Можно переопределить для исключения определенных путей
-     */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        // Дополнительные пути, которые не требуют аутентификации
+
         return path.startsWith("/api/public/") ||
                 path.equals("/error");
     }
